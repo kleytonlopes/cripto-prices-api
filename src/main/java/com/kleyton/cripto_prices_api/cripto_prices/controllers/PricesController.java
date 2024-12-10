@@ -8,6 +8,6 @@ public class PricesController {
 
     @GetMapping("/hello")
    String hello() {
-        return "Olá Todo Mundo!!!";
+        return "Olá Todos do Planeta!!!";
     }
 }
