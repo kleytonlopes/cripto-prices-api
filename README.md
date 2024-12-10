@@ -16,3 +16,7 @@ chmod +x rebuild.sh
 ```console
 ./rebuild.sh
 ```
+
+Swagger:
+
+[http://localhost:8080/swagger-ui/index.html]()
