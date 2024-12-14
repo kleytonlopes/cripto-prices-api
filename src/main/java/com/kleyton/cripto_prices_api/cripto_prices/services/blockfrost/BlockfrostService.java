@@ -18,7 +18,7 @@ public class BlockfrostService {
     private final String BLOCKFROST_PATH_ADDRESS = "/addresses/{address}";
     private final String BLOCKFROST_PATH_ACCOUNTS = "/accounts/{address}";
 
-    @Value("${BLOCKFROST_API_KEY}")
+    @Value("${blockfrost.project.key}")
     private String blockfrostApiKey;
 
     @Autowired

@@ -10,4 +10,4 @@ docker rmi cripto-prices-api
 docker build -t cripto-prices-api .
 
 # Executar um novo container
-docker run --name cripto-prices-api-container -p 8080:8080 cripto-prices-api
+docker run --name cripto-prices-api-container --env-file .env -p 8080:8080 cripto-prices-api

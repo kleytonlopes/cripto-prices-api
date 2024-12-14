@@ -9,5 +9,13 @@ RUN mvn clean package -DskipTests
 FROM openjdk:21-slim
 WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
+
+# Etapa 2: .env
+ARG ENV_FILE_PATH=.env
+COPY ${ENV_FILE_PATH} /app/.env
+
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
+#export
+CMD ["sh", "-c", "export $(grep -v '^#' /app/.env | xargs) && java -jar app.jar"]

@@ -3,7 +3,6 @@ package com.kleyton.cripto_prices_api.cripto_prices.controllers;
 import com.kleyton.cripto_prices_api.cripto_prices.exceptions.InvalidSymbolException;
 import com.kleyton.cripto_prices_api.cripto_prices.services.CardanoService;
 import com.kleyton.cripto_prices_api.cripto_prices.services.blockfrost.AddressResponse;
-import com.kleyton.cripto_prices_api.cripto_prices.services.blockfrost.StakingResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
