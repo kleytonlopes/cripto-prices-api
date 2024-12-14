@@ -14,7 +14,7 @@ public class PriceService {
     @Autowired
     private BinanceService binanceService;
 
-    public String getPrice(String symbol) {
+    public Double getPrice(String symbol) {
         try {
             BinancePriceResponse response = binanceService.getPrice(symbol);
             if (response != null) {
