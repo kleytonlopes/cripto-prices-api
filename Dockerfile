@@ -12,7 +12,7 @@ COPY --from=builder /app/target/*.jar app.jar
 
 # Etapa 2: .env
 ARG ENV_FILE_PATH=.env
-COPY ${ENV_FILE_PATH} /app/.env
+RUN if [ -f "${ENV_FILE_PATH}" ]; then cp "${ENV_FILE_PATH}" /app/.env; else echo "No .env file provided"; fi
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
