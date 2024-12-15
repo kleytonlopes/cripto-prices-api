@@ -11,7 +11,7 @@ import java.util.HashMap;
 @Service
 public class BinanceService {
 
-    private final String BINANCE_BASE_URL = "https://api.binance.us/api/v3/ticker";
+    private final String BINANCE_BASE_URL = "https://api.binance.com/api/v3/ticker";
     private final String BINANCE_PATH_PRICE = "/price";
 
     @Autowired
