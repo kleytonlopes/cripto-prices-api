@@ -65,35 +65,27 @@ public class BinanceService {
         LockedPositionsResponse lockedPositions = this.getStakingLockedPositions();
 
         List<Asset> assets = new ArrayList<>();
+        assets.addAll(account.toAssetList());
+        assets.addAll(flexiblePositions.toAssetList());
+        assets.addAll(lockedPositions.toAssetList());
 
-        for (BalanceResponse balance : account.getFilteredBalances()){
-            String symbol = balance.getAsset() + "USDT";
-            Double totalPrice = null;
-            try {
-                if(balance.getAsset().equals("LDUSDC")){
-                    continue;
-                }
-                if(balance.getAsset().contains("USD")){
-                    totalPrice = balance.getFree() + balance.getLocked();
-                } else{
-                    totalPrice = balance.getTotalPrice(this.getPrice(symbol).getPrice());
-                }
-                assets.add(new Asset(balance.getAsset(), balance.getFree() + balance.getLocked(), totalPrice));
-            }catch (Exception e){}
-        }
 
-        for (FlexibleRowResponse row : flexiblePositions.getRowsResponse()){
-            String symbol = row.getAsset() + "USDT";
-            Double unitPrice = this.getPrice(symbol).getPrice();
-            Double totalPrice = unitPrice * row.getTotalAmount();
-            assets.add(new Asset(row.getAsset(), row.getTotalAmount(), totalPrice));
-        }
+        //remover LDUSDC se houver
+        assets.removeIf(a -> a.getSymbol().equals("LDUSDC"));
 
-        for (LockedRowResponse row : lockedPositions.getRowsResponse()){
-            String symbol = row.getAsset() + "USDT";
-            Double unitPrice = this.getPrice(symbol).getPrice();
-            Double totalPrice = unitPrice * row.getAmount();
-            assets.add(new Asset(row.getAsset(), row.getAmount(), totalPrice));
+        //se for Stable Coin, o preço do ativo já é em dólares
+        assets.stream()
+                .filter(a -> a.getSymbol().contains("USD"))
+                .forEach(a -> a.setValueInDollars(a.getQuantity()));
+
+        //Settar preço em dólares nos Assets
+        for(Asset asset: assets){
+            if(asset.getValueInDollars() == null){
+                try{
+                    PriceResponse priceResponse = this.getPrice(asset.getSymbol()+"USDT");
+                    asset.setValueInDollars(priceResponse.getPrice() * asset.getQuantity());
+                }catch (Exception e){}
+            }
         }
 
         return new BinanceResponse(assets);

@@ -23,29 +23,6 @@ public class CardanoController {
     @Autowired
     CardanoService cardanoService;
 
-    @Operation(summary = "Obtém o saldo atual da cardano em dólares de um endereço (Soma o saldo do endereço mais o saldo em staking).",
-            description = "Retorna o saldo atual da ADA Cardano e o endereço de staking de um endereço de carteira fornecido. O endereço deve ser válido.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Saldo retornado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Endereço inválido"),
-            @ApiResponse(responseCode = "500", description = "Erro interno")
-    })
-    @GetMapping("/address/balance")
-    public ResponseEntity<?> getAddressBalance(
-            @Parameter(description = "Endereço para o qual o saldo e o endereço de staking será retornado",
-                    example = "addr1q99ky4pcqmszp7cvddudvypnxmz6mwk38hcjf8wg06gyk9sc25c" +
-                            "plnq5wge79hq0gxvafx0lgp9vu9mewkehj2zg7f9q9tfacj")
-            @RequestParam String address) {
-        try {
-            CardanoResponse response = cardanoService.getAddressTotalBalance(address);
-            return ResponseEntity.ok(response);
-        } catch (InvalidSymbolException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
-        }
-    }
-
     @Operation(summary = "Obtém o saldo atual da cardano em dólares em staking de um endereço.",
             description = "Retorna o saldo atual da ADA Cardano  em staking do endereço fornecido. O endereço deve ser válido.")
     @ApiResponses({

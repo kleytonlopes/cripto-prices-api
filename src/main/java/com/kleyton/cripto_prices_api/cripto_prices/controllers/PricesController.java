@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-@Tag(name = "Price", description = "Acesso aos preços das criptomoedas na Binance")
+@Tag(name = "Price", description = "Acesso aos preços das criptomoedas")
 @RestController
 @RequestMapping
 public class PricesController {

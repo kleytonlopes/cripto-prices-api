@@ -32,7 +32,7 @@ public class CardanoService {
 
             return CardanoResponse.builder()
                     .stakeAddress(addressResponse.getStakeAddress())
-                    .asset(new Asset("ADAUSDT", totalQuantityAdas.doubleValue(), totalValue))
+                    .asset(new Asset("ADA", totalQuantityAdas.doubleValue(), totalValue))
                     .build();
 
         } catch (HttpClientErrorException.BadRequest e) {

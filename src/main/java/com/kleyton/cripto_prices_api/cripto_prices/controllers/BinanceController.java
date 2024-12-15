@@ -44,25 +44,6 @@ public class BinanceController {
         }
     }
 
-    @Operation(summary = "Obtém os saldos em dólares de cada ativo na conta da Binance",
-            description = "Retorna os saldos em dólares de cada ativo na conta da Binance.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Balanços retornados com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Símbolo inválido"),
-            @ApiResponse(responseCode = "500", description = "Erro interno")
-    })
-    @GetMapping("/total/assets")
-    public ResponseEntity<?> getTotalBalances() {
-        try {
-            BinanceResponse price = binanceService.getTotalBalance();
-            return ResponseEntity.ok(price);
-        } catch (InvalidSymbolException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
-        }
-    }
-
     @GetMapping("/simple-earn/balances")
     public ResponseEntity<?> getStakingBalances() {
         try {
