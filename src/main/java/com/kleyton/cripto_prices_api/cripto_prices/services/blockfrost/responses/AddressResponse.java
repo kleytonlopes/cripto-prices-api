@@ -1,4 +1,4 @@
-package com.kleyton.cripto_prices_api.cripto_prices.services.blockfrost;
+package com.kleyton.cripto_prices_api.cripto_prices.services.blockfrost.responses;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,19 +12,19 @@ import java.util.List;
 @Getter
 @Setter
 public class AddressResponse {
-    private List<Amount> amount;
-
+    @JsonProperty("amount")
+    private List<AmountResponse> amountResponse;
     @JsonProperty("stake_address")
     private String stakeAddress;
 
     public BigInteger getQuantityAdas(){
         final String LOVELACE_NAME = "lovelace";
-        Amount amountLovelace = amount.stream()
+        AmountResponse amountResponseLovelace = amountResponse.stream()
                 .filter(a -> a.getUnit().equals(LOVELACE_NAME))
                 .findFirst().orElse(null);
-        if(amountLovelace == null){
+        if(amountResponseLovelace == null){
             return BigInteger.valueOf(0);
         }
-        return amountLovelace.getQuantity().divide(BigInteger.valueOf(1000000));
+        return amountResponseLovelace.getQuantity().divide(BigInteger.valueOf(1000000));
     }
 }

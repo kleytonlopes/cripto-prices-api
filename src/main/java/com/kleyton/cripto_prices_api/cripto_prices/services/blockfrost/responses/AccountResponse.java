@@ -1,4 +1,4 @@
-package com.kleyton.cripto_prices_api.cripto_prices.services.blockfrost;
+package com.kleyton.cripto_prices_api.cripto_prices.services.blockfrost.responses;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +10,7 @@ import java.math.BigInteger;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
-public class StakingResponse {
+public class AccountResponse {
     @JsonProperty("controlled_amount")
     private BigInteger controlledAmount;
 

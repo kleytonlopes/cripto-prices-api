@@ -1,5 +1,7 @@
 package com.kleyton.cripto_prices_api.cripto_prices.services.blockfrost;
 
+import com.kleyton.cripto_prices_api.cripto_prices.services.blockfrost.responses.AddressResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.blockfrost.responses.AccountResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -24,21 +26,17 @@ public class BlockfrostService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public StakingResponse getStakingBalance(String stakingAddress) throws HttpClientErrorException.BadRequest{
+    public AccountResponse getStakingAccountBalances(String stakingAddress) throws HttpClientErrorException.BadRequest{
         String url = BLOCKFROST_BASE_URL + BLOCKFROST_PATH_ACCOUNTS;
-
         Map<String, String> params = new HashMap<>();
         params.put("address", stakingAddress);
-
-        return restTemplate.exchange(url, HttpMethod.GET, getHttpEntity(), StakingResponse.class, params).getBody();
+        return restTemplate.exchange(url, HttpMethod.GET, getHttpEntity(), AccountResponse.class, params).getBody();
     }
 
-    public AddressResponse getAddressBalance(String address) throws HttpClientErrorException.BadRequest{
+    public AddressResponse getAddressBalances(String address) throws HttpClientErrorException.BadRequest{
         String url = BLOCKFROST_BASE_URL + BLOCKFROST_PATH_ADDRESS;
-
         Map<String, String> params = new HashMap<>();
         params.put("address", address);
-
         return restTemplate.exchange(url, HttpMethod.GET, getHttpEntity(), AddressResponse.class, params).getBody();
     }
 

@@ -2,7 +2,7 @@ package com.kleyton.cripto_prices_api.cripto_prices.services;
 
 import com.kleyton.cripto_prices_api.cripto_prices.exceptions.ApiError;
 import com.kleyton.cripto_prices_api.cripto_prices.exceptions.InvalidSymbolException;
-import com.kleyton.cripto_prices_api.cripto_prices.services.binance.BinancePriceResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.price.PriceResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.BinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class PriceService {
 
     public Double getPrice(String symbol) {
         try {
-            BinancePriceResponse response = binanceService.getPrice(symbol);
+            PriceResponse response = binanceService.getPrice(symbol);
             if (response != null) {
                 return response.getPrice();
             } else {
