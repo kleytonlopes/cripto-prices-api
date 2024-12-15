@@ -62,7 +62,7 @@ public class SummaryController {
                             "plnq5wge79hq0gxvafx0lgp9vu9mewkehj2zg7f9q9tfacj")
             @RequestParam String address) {
         try {
-            CardanoResponse response = cardanoService.getAddressTotalBalance(address);
+            CardanoResponse response = cardanoService.getTotalBalance(address);
             return ResponseEntity.ok(response);
         } catch (InvalidSymbolException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

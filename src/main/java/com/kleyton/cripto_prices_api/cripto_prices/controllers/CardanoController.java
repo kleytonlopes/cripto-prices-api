@@ -31,13 +31,36 @@ public class CardanoController {
             @ApiResponse(responseCode = "500", description = "Erro interno")
     })
     @GetMapping("/staking/balance")
-    public ResponseEntity<?> getPrice(
+    public ResponseEntity<?> getStakingBalance(
             @Parameter(description = "Endereço para o qual o saldo será retornado",
                     example = "addr1q99ky4pcqmszp7cvddudvypnxmz6mwk38hcjf8wg06gyk9sc25c" +
                             "plnq5wge79hq0gxvafx0lgp9vu9mewkehj2zg7f9q9tfacj")
             @RequestParam String address) {
         try {
             Double response = cardanoService.getStakingBalance(address);
+            return ResponseEntity.ok(response);
+        } catch (InvalidSymbolException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Obtém o saldo atual da cardano em dólares de um endereço.",
+            description = "Retorna o saldo atual da ADA Cardano do endereço fornecido. O endereço deve ser válido.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Saldo retornado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Endereço inválido"),
+            @ApiResponse(responseCode = "500", description = "Erro interno")
+    })
+    @GetMapping("/address/balance")
+    public ResponseEntity<?> getAddressBalance(
+            @Parameter(description = "Endereço para o qual o saldo será retornado",
+                    example = "addr1q99ky4pcqmszp7cvddudvypnxmz6mwk38hcjf8wg06gyk9sc25c" +
+                            "plnq5wge79hq0gxvafx0lgp9vu9mewkehj2zg7f9q9tfacj")
+            @RequestParam String address) {
+        try {
+            Double response = cardanoService.getAddressBalance(address);
             return ResponseEntity.ok(response);
         } catch (InvalidSymbolException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

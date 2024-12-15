@@ -21,13 +21,16 @@ public class CardanoService {
     @Autowired
     BlockfrostService blockfrostService;
 
-    public CardanoResponse getAddressTotalBalance(String address) {
+    public CardanoResponse getTotalBalance(String address) {
         try {
             AddressResponse addressResponse = blockfrostService.getAddressBalances(address);
-            AccountResponse accountResponse = blockfrostService.getStakingAccountBalances(addressResponse.getStakeAddress());
+            AccountResponse accountResponse = blockfrostService
+                    .getStakingAccountBalances(addressResponse.getStakeAddress());
             Double price = priceService.getPrice("ADAUSDT");
 
-            BigInteger totalQuantityAdas = addressResponse.getQuantityAdas().add(accountResponse.getControlledAmount());
+            BigInteger totalQuantityAdas = addressResponse
+                    .getQuantityAdas()
+                    .add(accountResponse.getControlledAmount());
             Double totalValue = price * totalQuantityAdas.doubleValue();
 
             return CardanoResponse.builder()
@@ -41,10 +44,22 @@ public class CardanoService {
         }
     }
 
+    public Double getAddressBalance(String address) {
+        try {
+            AddressResponse addressResponse = blockfrostService.getAddressBalances(address);
+            Double price = priceService.getPrice("ADAUSDT");
+            return price * addressResponse.getQuantityAdas().doubleValue();
+        } catch (HttpClientErrorException.BadRequest e) {
+            String errorResponse = e.getResponseBodyAsString();
+            throw new RuntimeException(ApiError.UNEXPECTED_ERROR.getMessage(errorResponse), e);
+        }
+    }
+
     public Double getStakingBalance(String address) {
         try {
-            CardanoResponse cardanoResponse = this.getAddressTotalBalance(address);
-            AccountResponse accountResponse = blockfrostService.getStakingAccountBalances(cardanoResponse.getStakeAddress());
+            AddressResponse addressResponse = blockfrostService.getAddressBalances(address);
+            AccountResponse accountResponse = blockfrostService
+                    .getStakingAccountBalances(addressResponse.getStakeAddress());
             Double price = priceService.getPrice("ADAUSDT");
             return price * accountResponse.getControlledAmount().doubleValue();
         } catch (HttpClientErrorException.BadRequest e) {
