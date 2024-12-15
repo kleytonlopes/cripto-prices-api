@@ -27,26 +27,24 @@ public class BlockfrostService {
     public StakingResponse getStakingBalance(String stakingAddress) throws HttpClientErrorException.BadRequest{
         String url = BLOCKFROST_BASE_URL + BLOCKFROST_PATH_ACCOUNTS;
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("project_id", blockfrostApiKey);
-        HttpEntity entity = new HttpEntity<>(headers);
-
         Map<String, String> params = new HashMap<>();
         params.put("address", stakingAddress);
 
-        return restTemplate.exchange(url, HttpMethod.GET ,entity, StakingResponse.class, params).getBody();
+        return restTemplate.exchange(url, HttpMethod.GET, getHttpEntity(), StakingResponse.class, params).getBody();
     }
 
     public AddressResponse getAddressBalance(String address) throws HttpClientErrorException.BadRequest{
         String url = BLOCKFROST_BASE_URL + BLOCKFROST_PATH_ADDRESS;
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("project_id", blockfrostApiKey);
-        HttpEntity entity = new HttpEntity<>(headers);
-
-
         Map<String, String> params = new HashMap<>();
         params.put("address", address);
-        return restTemplate.exchange(url, HttpMethod.GET ,entity, AddressResponse.class, params).getBody();
+
+        return restTemplate.exchange(url, HttpMethod.GET, getHttpEntity(), AddressResponse.class, params).getBody();
+    }
+
+    private HttpEntity<?> getHttpEntity(){
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("project_id", blockfrostApiKey);
+        return new HttpEntity<>(headers);
     }
 }

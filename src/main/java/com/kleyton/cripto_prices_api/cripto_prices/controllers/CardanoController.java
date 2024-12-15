@@ -1,6 +1,7 @@
 package com.kleyton.cripto_prices_api.cripto_prices.controllers;
 
 import com.kleyton.cripto_prices_api.cripto_prices.exceptions.InvalidSymbolException;
+import com.kleyton.cripto_prices_api.cripto_prices.services.CardanoResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.CardanoService;
 import com.kleyton.cripto_prices_api.cripto_prices.services.blockfrost.AddressResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,8 +24,8 @@ public class CardanoController {
     @Autowired
     CardanoService cardanoService;
 
-    @Operation(summary = "Obtém o saldo atual da cardano em dólares de um endereço.",
-            description = "Retorna o saldo atual da ADA Cardano do endereço fornecido. O endereço deve ser válido.")
+    @Operation(summary = "Obtém o saldo atual da cardano em dólares de um endereço (Soma o saldo do endereço mais o saldo em staking).",
+            description = "Retorna o saldo atual da ADA Cardano e o endereço de staking de um endereço de carteira fornecido. O endereço deve ser válido.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Saldo retornado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Endereço inválido"),
@@ -32,12 +33,12 @@ public class CardanoController {
     })
     @GetMapping("/address/balance")
     public ResponseEntity<?> getAddressBalance(
-            @Parameter(description = "Endereço para o qual o saldo será retornado",
+            @Parameter(description = "Endereço para o qual o saldo e o endereço de staking será retornado",
                     example = "addr1q99ky4pcqmszp7cvddudvypnxmz6mwk38hcjf8wg06gyk9sc25c" +
                             "plnq5wge79hq0gxvafx0lgp9vu9mewkehj2zg7f9q9tfacj")
             @RequestParam String address) {
         try {
-            AddressResponse response = cardanoService.getAddressBalance(address);
+            CardanoResponse response = cardanoService.getAddressBalance(address);
             return ResponseEntity.ok(response);
         } catch (InvalidSymbolException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
