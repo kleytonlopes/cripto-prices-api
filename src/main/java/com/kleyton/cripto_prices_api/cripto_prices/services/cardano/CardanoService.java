@@ -1,9 +1,11 @@
-package com.kleyton.cripto_prices_api.cripto_prices.services;
+package com.kleyton.cripto_prices_api.cripto_prices.services.cardano;
 
 import com.kleyton.cripto_prices_api.cripto_prices.exceptions.ApiError;
+import com.kleyton.cripto_prices_api.cripto_prices.models.Asset;
 import com.kleyton.cripto_prices_api.cripto_prices.services.blockfrost.responses.AddressResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.blockfrost.BlockfrostService;
 import com.kleyton.cripto_prices_api.cripto_prices.services.blockfrost.responses.AccountResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.price.PriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -19,7 +21,7 @@ public class CardanoService {
     @Autowired
     BlockfrostService blockfrostService;
 
-    public CardanoResponse getAddressBalance(String address) {
+    public CardanoResponse getAddressTotalBalance(String address) {
         try {
             AddressResponse addressResponse = blockfrostService.getAddressBalances(address);
             AccountResponse accountResponse = blockfrostService.getStakingAccountBalances(addressResponse.getStakeAddress());
@@ -30,7 +32,7 @@ public class CardanoService {
 
             return CardanoResponse.builder()
                     .stakeAddress(addressResponse.getStakeAddress())
-                    .valueInDollars(totalValue)
+                    .asset(new Asset("ADAUSDT", totalQuantityAdas.doubleValue(), totalValue))
                     .build();
 
         } catch (HttpClientErrorException.BadRequest e) {
@@ -41,7 +43,7 @@ public class CardanoService {
 
     public Double getStakingBalance(String address) {
         try {
-            CardanoResponse cardanoResponse = this.getAddressBalance(address);
+            CardanoResponse cardanoResponse = this.getAddressTotalBalance(address);
             AccountResponse accountResponse = blockfrostService.getStakingAccountBalances(cardanoResponse.getStakeAddress());
             Double price = priceService.getPrice("ADAUSDT");
             return price * accountResponse.getControlledAmount().doubleValue();

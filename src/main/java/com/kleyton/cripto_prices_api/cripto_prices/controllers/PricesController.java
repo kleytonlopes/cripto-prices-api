@@ -1,7 +1,7 @@
 package com.kleyton.cripto_prices_api.cripto_prices.controllers;
 
 import com.kleyton.cripto_prices_api.cripto_prices.exceptions.InvalidSymbolException;
-import com.kleyton.cripto_prices_api.cripto_prices.services.PriceService;
+import com.kleyton.cripto_prices_api.cripto_prices.services.price.PriceService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

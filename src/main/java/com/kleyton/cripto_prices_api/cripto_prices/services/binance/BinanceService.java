@@ -1,10 +1,15 @@
 package com.kleyton.cripto_prices_api.cripto_prices.services.binance;
 
+import com.kleyton.cripto_prices_api.cripto_prices.models.Asset;
+import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.BinanceResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.account.AccountResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.account.BalanceResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.price.PriceResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.account.SimpleEarnAccountResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.position.FlexiblePositionsResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.position.FlexibleRowResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.position.LockedPositionsResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.position.LockedRowResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.utils.BinanceSignatureUtil;
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +25,8 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class BinanceService {
@@ -50,6 +57,46 @@ public class BinanceService {
                 .toUri();
         return restTemplate.exchange(uri, HttpMethod.GET,null, PriceResponse.class)
                 .getBody();
+    }
+
+    public BinanceResponse getTotalBalance(){
+        AccountResponse account = this.getAccount();
+        FlexiblePositionsResponse flexiblePositions = this.getStakingFlexiblePositions();
+        LockedPositionsResponse lockedPositions = this.getStakingLockedPositions();
+
+        List<Asset> assets = new ArrayList<>();
+
+        for (BalanceResponse balance : account.getFilteredBalances()){
+            String symbol = balance.getAsset() + "USDT";
+            Double totalPrice = null;
+            try {
+                if(balance.getAsset().equals("LDUSDC")){
+                    continue;
+                }
+                if(balance.getAsset().contains("USD")){
+                    totalPrice = balance.getFree() + balance.getLocked();
+                } else{
+                    totalPrice = balance.getTotalPrice(this.getPrice(symbol).getPrice());
+                }
+                assets.add(new Asset(balance.getAsset(), balance.getFree() + balance.getLocked(), totalPrice));
+            }catch (Exception e){}
+        }
+
+        for (FlexibleRowResponse row : flexiblePositions.getRowsResponse()){
+            String symbol = row.getAsset() + "USDT";
+            Double unitPrice = this.getPrice(symbol).getPrice();
+            Double totalPrice = unitPrice * row.getTotalAmount();
+            assets.add(new Asset(row.getAsset(), row.getTotalAmount(), totalPrice));
+        }
+
+        for (LockedRowResponse row : lockedPositions.getRowsResponse()){
+            String symbol = row.getAsset() + "USDT";
+            Double unitPrice = this.getPrice(symbol).getPrice();
+            Double totalPrice = unitPrice * row.getAmount();
+            assets.add(new Asset(row.getAsset(), row.getAmount(), totalPrice));
+        }
+
+        return new BinanceResponse(assets);
     }
 
     public AccountResponse getAccount() throws HttpClientErrorException.BadRequest {

@@ -1,8 +1,8 @@
 package com.kleyton.cripto_prices_api.cripto_prices.controllers;
 
 import com.kleyton.cripto_prices_api.cripto_prices.exceptions.InvalidSymbolException;
-import com.kleyton.cripto_prices_api.cripto_prices.services.CardanoResponse;
-import com.kleyton.cripto_prices_api.cripto_prices.services.CardanoService;
+import com.kleyton.cripto_prices_api.cripto_prices.services.cardano.CardanoResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.cardano.CardanoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,7 +37,7 @@ public class CardanoController {
                             "plnq5wge79hq0gxvafx0lgp9vu9mewkehj2zg7f9q9tfacj")
             @RequestParam String address) {
         try {
-            CardanoResponse response = cardanoService.getAddressBalance(address);
+            CardanoResponse response = cardanoService.getAddressTotalBalance(address);
             return ResponseEntity.ok(response);
         } catch (InvalidSymbolException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

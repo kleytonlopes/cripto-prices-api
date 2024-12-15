@@ -1,6 +1,7 @@
 package com.kleyton.cripto_prices_api.cripto_prices.controllers;
 
 import com.kleyton.cripto_prices_api.cripto_prices.exceptions.InvalidSymbolException;
+import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.BinanceResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.account.AccountResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.BinanceService;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.account.SimpleEarnAccountResponse;
@@ -24,8 +25,8 @@ public class BinanceController {
     @Autowired
     private BinanceService binanceService;
 
-    @Operation(summary = "Obtém os saldos em dólares de cada ativo na conta da Binance",
-            description = "Retorna os saldos em dólares de cada ativo na conta da Binance.")
+    @Operation(summary = "Obtém a quantidade de cada ativo na conta da Binance",
+            description = "Retorna a quantidade de cada ativo na conta da Binance.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Balanços retornados com sucesso"),
             @ApiResponse(responseCode = "400", description = "Símbolo inválido"),
@@ -35,6 +36,25 @@ public class BinanceController {
     public ResponseEntity<?> getBalances() {
         try {
             AccountResponse price = binanceService.getAccount();
+            return ResponseEntity.ok(price);
+        } catch (InvalidSymbolException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Obtém os saldos em dólares de cada ativo na conta da Binance",
+            description = "Retorna os saldos em dólares de cada ativo na conta da Binance.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Balanços retornados com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Símbolo inválido"),
+            @ApiResponse(responseCode = "500", description = "Erro interno")
+    })
+    @GetMapping("/total/assets")
+    public ResponseEntity<?> getTotalBalances() {
+        try {
+            BinanceResponse price = binanceService.getTotalBalance();
             return ResponseEntity.ok(price);
         } catch (InvalidSymbolException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

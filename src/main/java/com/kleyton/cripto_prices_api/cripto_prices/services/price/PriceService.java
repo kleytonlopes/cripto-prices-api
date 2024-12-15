@@ -1,4 +1,4 @@
-package com.kleyton.cripto_prices_api.cripto_prices.services;
+package com.kleyton.cripto_prices_api.cripto_prices.services.price;
 
 import com.kleyton.cripto_prices_api.cripto_prices.exceptions.ApiError;
 import com.kleyton.cripto_prices_api.cripto_prices.exceptions.InvalidSymbolException;

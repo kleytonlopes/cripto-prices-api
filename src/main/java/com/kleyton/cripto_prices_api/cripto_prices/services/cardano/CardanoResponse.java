@@ -1,6 +1,7 @@
-package com.kleyton.cripto_prices_api.cripto_prices.services;
+package com.kleyton.cripto_prices_api.cripto_prices.services.cardano;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kleyton.cripto_prices_api.cripto_prices.models.Asset;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,8 +10,8 @@ import lombok.Setter;
 @Setter
 @Builder
 public class CardanoResponse {
-    @JsonProperty("value_in_dollars")
-    private Double valueInDollars;
+    private Asset asset;
+
     @JsonProperty("stake_address")
     private String stakeAddress;
 }
