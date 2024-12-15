@@ -29,6 +29,8 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
+    - name: Set environment variables
+      run: echo "BLOCKFROST_API_KEY=${{ secrets.BLOCKFROST_API_KEY }}" >> $GITHUB_ENV
     - name: Run Tests
       run: mvn -B test --file pom.xml
 
