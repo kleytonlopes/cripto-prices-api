@@ -23,7 +23,10 @@ public class FlexiblePositionsResponse {
         return this.getRowsResponse()
                 .stream()
                 .map(r ->
-                        Asset.builder().symbol(r.getAsset()).quantity(r.getTotalAmount()).build()
+                        Asset.builder()
+                                .symbol(r.getAsset())
+                                .quantity(r.getTotalAmount())
+                                .build()
                 )
                 .toList();
     }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -43,6 +44,7 @@ public class BlockfrostService {
     private HttpEntity<?> getHttpEntity(){
         HttpHeaders headers = new HttpHeaders();
         headers.set("project_id", blockfrostApiKey);
+        headers.setContentType(MediaType.APPLICATION_JSON);
         return new HttpEntity<>(headers);
     }
 }

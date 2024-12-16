@@ -5,6 +5,8 @@ import com.kleyton.cripto_prices_api.cripto_prices.services.binance.BinanceServi
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.BinanceResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.cardano.CardanoResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.cardano.CardanoService;
+import com.kleyton.cripto_prices_api.cripto_prices.services.coinbase.CoinbaseService;
+import com.kleyton.cripto_prices_api.cripto_prices.services.coinbase.responses.CoinbaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,6 +30,9 @@ public class SummaryController {
     @Autowired
     private BinanceService binanceService;
 
+    @Autowired
+    private CoinbaseService coinbaseService;
+
     @Operation(summary = "Obtém os saldos em dólares de cada ativo na conta da Binance",
             description = "Retorna os saldos em dólares de cada ativo na conta da Binance.")
     @ApiResponses({
@@ -47,6 +52,25 @@ public class SummaryController {
         }
     }
 
+    @Operation(summary = "Obtém os saldos em dólares de cada ativo na conta da Coinbase",
+            description = "Retorna os saldos em dólares de cada ativo na conta da Coinbase.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Balanços retornados com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Símbolo inválido"),
+            @ApiResponse(responseCode = "500", description = "Erro interno")
+    })
+    @GetMapping("/coinbase")
+    public ResponseEntity<?> getCoinbaseTotalBalances() {
+        try {
+            CoinbaseResponse coinbaseResponse = coinbaseService.getTotalBalance();
+            return ResponseEntity.ok(coinbaseResponse);
+        } catch (InvalidSymbolException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
+        }
+    }
+
 
     @Operation(summary = "Obtém o saldo atual da cardano em dólares de um endereço (Soma o saldo do endereço mais o saldo em staking).",
             description = "Retorna o saldo atual da ADA Cardano e o endereço de staking de um endereço de carteira fornecido. O endereço deve ser válido.")
@@ -56,7 +80,7 @@ public class SummaryController {
             @ApiResponse(responseCode = "500", description = "Erro interno")
     })
     @GetMapping("/cardano")
-    public ResponseEntity<?> getAddressBalance(
+    public ResponseEntity<?> getCardanoTotalBalance(
             @Parameter(description = "Endereço para o qual o saldo e o endereço de staking será retornado",
                     example = "addr1q99ky4pcqmszp7cvddudvypnxmz6mwk38hcjf8wg06gyk9sc25c" +
                             "plnq5wge79hq0gxvafx0lgp9vu9mewkehj2zg7f9q9tfacj")

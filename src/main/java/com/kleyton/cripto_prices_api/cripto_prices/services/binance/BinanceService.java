@@ -3,20 +3,18 @@ package com.kleyton.cripto_prices_api.cripto_prices.services.binance;
 import com.kleyton.cripto_prices_api.cripto_prices.models.Asset;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.BinanceResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.account.AccountResponse;
-import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.account.BalanceResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.price.PriceResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.account.SimpleEarnAccountResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.position.FlexiblePositionsResponse;
-import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.position.FlexibleRowResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.position.LockedPositionsResponse;
-import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.position.LockedRowResponse;
-import com.kleyton.cripto_prices_api.cripto_prices.utils.BinanceSignatureUtil;
+import com.kleyton.cripto_prices_api.cripto_prices.utils.SignatureUtil;
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
@@ -69,7 +67,6 @@ public class BinanceService {
         assets.addAll(flexiblePositions.toAssetList());
         assets.addAll(lockedPositions.toAssetList());
 
-
         //remover LDUSDC se houver
         assets.removeIf(a -> a.getSymbol().equals("LDUSDC"));
 
@@ -118,6 +115,7 @@ public class BinanceService {
     private HttpEntity<?> getHttpEntity(){
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-MBX-APIKEY", binanceApiKey);
+        headers.setContentType(MediaType.APPLICATION_JSON);
         return new HttpEntity<>(headers);
     }
 
@@ -133,7 +131,7 @@ public class BinanceService {
                 .build();
         String queryString = uriComponents.getQuery();
         return UriComponentsBuilder.fromUri(uriComponents.toUri())
-                .queryParam("signature",BinanceSignatureUtil.createSignature(binanceSecretKey, queryString))
+                .queryParam("signature", SignatureUtil.createSignature(binanceSecretKey, queryString))
                 .build()
                 .toUri();
     }

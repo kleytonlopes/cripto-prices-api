@@ -1,7 +1,6 @@
 package com.kleyton.cripto_prices_api.cripto_prices.controllers;
 
 import com.kleyton.cripto_prices_api.cripto_prices.exceptions.InvalidSymbolException;
-import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.BinanceResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.account.AccountResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.BinanceService;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.account.SimpleEarnAccountResponse;

@@ -27,11 +27,11 @@ public class AccountResponse {
         return this.getFilteredBalances()
                 .stream()
                 .map(b ->
-                        Asset.builder().symbol(b.getAsset()).quantity(b.getTotal()).build()
+                        Asset.builder()
+                                .symbol(b.getAsset())
+                                .quantity(b.getTotal())
+                                .build()
                 )
                 .toList();
     }
-
-
-
 }

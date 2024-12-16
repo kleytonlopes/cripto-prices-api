@@ -23,7 +23,10 @@ public class LockedPositionsResponse {
         return this.getRowsResponse()
                 .stream()
                 .map(r ->
-                        Asset.builder().symbol(r.getAsset()).quantity(r.getAmount()).build()
+                        Asset.builder()
+                                .symbol(r.getAsset())
+                                .quantity(r.getAmount())
+                                .build()
                 )
                 .toList();
     }

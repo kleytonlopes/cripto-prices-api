@@ -34,6 +34,8 @@ jobs:
         echo "BLOCKFROST_API_KEY=${{ secrets.BLOCKFROST_API_KEY }}" >> $GITHUB_ENV
         echo "BINANCE_API_KEY=${{ secrets.BINANCE_API_KEY }}" >> $GITHUB_ENV
         echo "BINANCE_SECRET_KEY==${{ secrets.BINANCE_SECRET_KEY }}" >> $GITHUB_ENV
+        echo "COINBASE_API_KEY=${{ secrets.COINBASE_API_KEY }}" >> $GITHUB_ENV
+        echo "COINBASE_SECRET_KEY==${{ secrets.COINBASE_SECRET_KEY }}" >> $GITHUB_ENV
     - name: Run Tests
       run: mvn -B test --file pom.xml
 

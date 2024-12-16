@@ -34,7 +34,6 @@ public class CardanoService {
             Double totalValue = price * totalQuantityAdas.doubleValue();
 
             return CardanoResponse.builder()
-                    .stakeAddress(addressResponse.getStakeAddress())
                     .asset(new Asset("ADA", totalQuantityAdas.doubleValue(), totalValue))
                     .build();
 

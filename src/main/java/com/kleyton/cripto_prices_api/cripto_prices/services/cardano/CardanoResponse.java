@@ -11,7 +11,4 @@ import lombok.Setter;
 @Builder
 public class CardanoResponse {
     private Asset asset;
-
-    @JsonProperty("stake_address")
-    private String stakeAddress;
 }
