@@ -1,7 +1,12 @@
 package com.kleyton.cripto_prices_api.cripto_prices.services.kucoin;
 
+import com.kleyton.cripto_prices_api.cripto_prices.models.Asset;
+import com.kleyton.cripto_prices_api.cripto_prices.services.binance.BinanceService;
+import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.price.BinancePriceResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.KucoinResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.account.AccountsResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.kucoinEarn.KucoinEarnResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.price.KucoinPriceResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.utils.SignatureUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,11 +15,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -33,6 +41,18 @@ public class KucoinService {
     @Autowired
     private RestTemplate restTemplate;
 
+    public KucoinPriceResponse getPrice(String symbol) throws HttpClientErrorException.BadRequest{
+        final String KUCOIN_PATH_PRICE = "/market/orderbook/level1";
+        String url = KUCOIN_BASE_URL + KUCOIN_PATH_PRICE;
+
+        URI uri = UriComponentsBuilder.fromUriString(url)
+                .queryParam("symbol", symbol)
+                .build()
+                .toUri();
+        return restTemplate.exchange(uri, HttpMethod.GET,null, KucoinPriceResponse.class)
+                .getBody();
+    }
+
     public AccountsResponse getAccounts(){
         final String KUCOIN_PATH_ACCOUNT = "/accounts";
         final String url = KUCOIN_BASE_URL + KUCOIN_PATH_ACCOUNT;
@@ -48,7 +68,32 @@ public class KucoinService {
                 HttpMethod.GET, entity, AccountsResponse.class).getBody();
     }
 
-    public KucoinEarnResponse getKucoiEarnItems(){
+    public KucoinResponse getTotalBalance(){
+        AccountsResponse accounts= this.getAccounts();
+        KucoinEarnResponse kucoinEarnItems = this.getKucoinEarnItems();
+
+        List<Asset> assets = new ArrayList<>();
+        assets.addAll(accounts.toAssetList());
+        assets.addAll(kucoinEarnItems.toAssetList());
+
+        //se for Stable Coin, o preço do ativo já é em dólares
+        assets.stream()
+                .filter(a -> a.getSymbol().contains("USD"))
+                .forEach(a -> a.setValueInDollars(a.getQuantity()));
+
+        //Settar preço em dólares nos Assets
+        for(Asset asset: assets){
+            if(asset.getValueInDollars() == null){
+                try{
+                    KucoinPriceResponse priceResponse = this.getPrice(asset.getSymbol()+"-USDT");
+                    asset.setValueInDollars(priceResponse.getDataResponse().getPrice() * asset.getQuantity());
+                }catch (Exception e){}
+            }
+        }
+        return new KucoinResponse(assets);
+    }
+
+    public KucoinEarnResponse getKucoinEarnItems(){
         final String KUCOIN_PATH_EARN = "/earn/hold-assets";
         final String url = KUCOIN_BASE_URL + KUCOIN_PATH_EARN;
         final String timestamp = String.valueOf(Instant.now().toEpochMilli());

@@ -26,7 +26,7 @@ public class CardanoService {
             AddressResponse addressResponse = blockfrostService.getAddressBalances(address);
             AccountResponse accountResponse = blockfrostService
                     .getStakingAccountBalances(addressResponse.getStakeAddress());
-            Double price = priceService.getPrice("ADAUSDT");
+            Double price = priceService.getBinancePrice("ADAUSDT");
 
             BigInteger totalQuantityAdas = addressResponse
                     .getQuantityAdas()
@@ -46,7 +46,7 @@ public class CardanoService {
     public Double getAddressBalance(String address) {
         try {
             AddressResponse addressResponse = blockfrostService.getAddressBalances(address);
-            Double price = priceService.getPrice("ADAUSDT");
+            Double price = priceService.getBinancePrice("ADAUSDT");
             return price * addressResponse.getQuantityAdas().doubleValue();
         } catch (HttpClientErrorException.BadRequest e) {
             String errorResponse = e.getResponseBodyAsString();
@@ -59,7 +59,7 @@ public class CardanoService {
             AddressResponse addressResponse = blockfrostService.getAddressBalances(address);
             AccountResponse accountResponse = blockfrostService
                     .getStakingAccountBalances(addressResponse.getStakeAddress());
-            Double price = priceService.getPrice("ADAUSDT");
+            Double price = priceService.getBinancePrice("ADAUSDT");
             return price * accountResponse.getControlledAmount().doubleValue();
         } catch (HttpClientErrorException.BadRequest e) {
             String errorResponse = e.getResponseBodyAsString();

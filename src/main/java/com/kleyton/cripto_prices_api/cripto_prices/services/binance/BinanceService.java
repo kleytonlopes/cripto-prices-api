@@ -3,7 +3,7 @@ package com.kleyton.cripto_prices_api.cripto_prices.services.binance;
 import com.kleyton.cripto_prices_api.cripto_prices.models.Asset;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.BinanceResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.account.AccountResponse;
-import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.price.PriceResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.price.BinancePriceResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.account.SimpleEarnAccountResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.position.FlexiblePositionsResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.position.LockedPositionsResponse;
@@ -46,14 +46,14 @@ public class BinanceService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public PriceResponse getPrice(String symbol) throws HttpClientErrorException.BadRequest{
+    public BinancePriceResponse getPrice(String symbol) throws HttpClientErrorException.BadRequest{
         String url = BINANCE_BASE_URL + BINANCE_PATH_PRICE;
 
         URI uri = UriComponentsBuilder.fromUriString(url)
                 .queryParam("symbol", symbol)
                 .build()
                 .toUri();
-        return restTemplate.exchange(uri, HttpMethod.GET,null, PriceResponse.class)
+        return restTemplate.exchange(uri, HttpMethod.GET,null, BinancePriceResponse.class)
                 .getBody();
     }
 
@@ -79,8 +79,8 @@ public class BinanceService {
         for(Asset asset: assets){
             if(asset.getValueInDollars() == null){
                 try{
-                    PriceResponse priceResponse = this.getPrice(asset.getSymbol()+"USDT");
-                    asset.setValueInDollars(priceResponse.getPrice() * asset.getQuantity());
+                    BinancePriceResponse binancePriceResponse = this.getPrice(asset.getSymbol()+"USDT");
+                    asset.setValueInDollars(binancePriceResponse.getPrice() * asset.getQuantity());
                 }catch (Exception e){}
             }
         }

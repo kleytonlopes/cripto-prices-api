@@ -7,6 +7,8 @@ import com.kleyton.cripto_prices_api.cripto_prices.services.cardano.CardanoRespo
 import com.kleyton.cripto_prices_api.cripto_prices.services.cardano.CardanoService;
 import com.kleyton.cripto_prices_api.cripto_prices.services.coinbase.CoinbaseService;
 import com.kleyton.cripto_prices_api.cripto_prices.services.coinbase.responses.CoinbaseResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.KucoinService;
+import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.KucoinResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,6 +34,9 @@ public class SummaryController {
 
     @Autowired
     private CoinbaseService coinbaseService;
+
+    @Autowired
+    private KucoinService kucoinService;
 
     @Operation(summary = "Obtém os saldos em dólares de cada ativo na conta da Binance",
             description = "Retorna os saldos em dólares de cada ativo na conta da Binance.")
@@ -64,6 +69,25 @@ public class SummaryController {
         try {
             CoinbaseResponse coinbaseResponse = coinbaseService.getTotalBalance();
             return ResponseEntity.ok(coinbaseResponse);
+        } catch (InvalidSymbolException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Obtém os saldos em dólares de cada ativo na conta da Kucoin",
+            description = "Retorna os saldos em dólares de cada ativo na conta da Kucoin.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Balanços retornados com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Símbolo inválido"),
+            @ApiResponse(responseCode = "500", description = "Erro interno")
+    })
+    @GetMapping("/kucoin")
+    public ResponseEntity<?> getKucoinTotalBalances() {
+        try {
+            KucoinResponse kucoinResponse = kucoinService.getTotalBalance();
+            return ResponseEntity.ok(kucoinResponse);
         } catch (InvalidSymbolException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

@@ -34,7 +34,7 @@ public class PricesController {
             @Parameter(description = "Símbolo para o qual o preço será retornado", example = "BTCUSDT")
             @RequestParam String symbol) {
         try {
-            Double price = priceService.getPrice(symbol);
+            Double price = priceService.getBinancePrice(symbol);
             return ResponseEntity.ok(price);
         } catch (InvalidSymbolException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

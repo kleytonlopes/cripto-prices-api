@@ -52,7 +52,7 @@ public class KucoinController {
     @GetMapping("/kucoinEarn")
     public ResponseEntity<?> getKucoinEarnItems() {
         try {
-            KucoinEarnResponse accounts = kucoinService.getKucoiEarnItems();
+            KucoinEarnResponse accounts = kucoinService.getKucoinEarnItems();
             return ResponseEntity.ok(accounts);
         } catch (InvalidSymbolException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
