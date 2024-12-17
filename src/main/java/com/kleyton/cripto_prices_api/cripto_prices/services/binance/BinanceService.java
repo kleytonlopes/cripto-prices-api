@@ -131,7 +131,7 @@ public class BinanceService {
                 .build();
         String queryString = uriComponents.getQuery();
         return UriComponentsBuilder.fromUri(uriComponents.toUri())
-                .queryParam("signature", SignatureUtil.createSignature(binanceSecretKey, queryString))
+                .queryParam("signature", SignatureUtil.createSignatureHex(binanceSecretKey, queryString))
                 .build()
                 .toUri();
     }

@@ -36,6 +36,9 @@ jobs:
         echo "BINANCE_SECRET_KEY==${{ secrets.BINANCE_SECRET_KEY }}" >> $GITHUB_ENV
         echo "COINBASE_API_KEY=${{ secrets.COINBASE_API_KEY }}" >> $GITHUB_ENV
         echo "COINBASE_SECRET_KEY==${{ secrets.COINBASE_SECRET_KEY }}" >> $GITHUB_ENV
+        echo "KUCOIN_API_KEY=${{ secrets.KUCOIN_API_KEY }}" >> $GITHUB_ENV
+        echo "KUCOIN_SECRET_KEY==${{ secrets.KUCOIN_SECRET_KEY }}" >> $GITHUB_ENV
+        echo "KUCOIN_API_PASSPHRASE==${{ secrets.KUCOIN_API_PASSPHRASE }}" >> $GITHUB_ENV
     - name: Run Tests
       run: mvn -B test --file pom.xml
 
