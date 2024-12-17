@@ -9,6 +9,8 @@ import com.kleyton.cripto_prices_api.cripto_prices.services.coinbase.CoinbaseSer
 import com.kleyton.cripto_prices_api.cripto_prices.services.coinbase.responses.CoinbaseResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.KucoinService;
 import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.KucoinResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.mercadoBitcoin.MercadoBitcoinService;
+import com.kleyton.cripto_prices_api.cripto_prices.services.mercadoBitcoin.responses.MercadoBitcoinResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,6 +39,9 @@ public class SummaryController {
 
     @Autowired
     private KucoinService kucoinService;
+
+    @Autowired
+    private MercadoBitcoinService mbService;
 
     @Operation(summary = "Obtém os saldos em dólares de cada ativo na conta da Binance",
             description = "Retorna os saldos em dólares de cada ativo na conta da Binance.")
@@ -88,6 +93,25 @@ public class SummaryController {
         try {
             KucoinResponse kucoinResponse = kucoinService.getTotalBalance();
             return ResponseEntity.ok(kucoinResponse);
+        } catch (InvalidSymbolException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Obtém os saldos em dólares de cada ativo na conta do Mercado Bitcoin",
+            description = "Retorna os saldos em dólares de cada ativo na conta do Mercado Bitcoin.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Balanços retornados com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Símbolo inválido"),
+            @ApiResponse(responseCode = "500", description = "Erro interno")
+    })
+    @GetMapping("/mercado-bitcoin")
+    public ResponseEntity<?> getMbTotalBalances() {
+        try {
+            MercadoBitcoinResponse mercadoBitcoinResponse = mbService.getTotalBalance();
+            return ResponseEntity.ok(mercadoBitcoinResponse);
         } catch (InvalidSymbolException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

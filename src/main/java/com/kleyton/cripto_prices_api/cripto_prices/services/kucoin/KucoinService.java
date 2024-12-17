@@ -1,8 +1,6 @@
 package com.kleyton.cripto_prices_api.cripto_prices.services.kucoin;
 
 import com.kleyton.cripto_prices_api.cripto_prices.models.Asset;
-import com.kleyton.cripto_prices_api.cripto_prices.services.binance.BinanceService;
-import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.price.BinancePriceResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.KucoinResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.account.AccountsResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.kucoinEarn.KucoinEarnResponse;

@@ -39,6 +39,8 @@ jobs:
         echo "KUCOIN_API_KEY=${{ secrets.KUCOIN_API_KEY }}" >> $GITHUB_ENV
         echo "KUCOIN_SECRET_KEY==${{ secrets.KUCOIN_SECRET_KEY }}" >> $GITHUB_ENV
         echo "KUCOIN_API_PASSPHRASE==${{ secrets.KUCOIN_API_PASSPHRASE }}" >> $GITHUB_ENV
+        echo "MB_API_KEY=${{ secrets.MB_API_KEY }}" >> $GITHUB_ENV
+        echo "MB_SECRET_KEY=${{ secrets.MB_SECRET_KEY }}" >> $GITHUB_ENV
     - name: Run Tests
       run: mvn -B test --file pom.xml
 
