@@ -1,6 +1,7 @@
 package com.kleyton.cripto_prices_api.cripto_prices.services.kucoin;
 
-import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.AccountsResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.account.AccountsResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.kucoinEarn.KucoinEarnResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.utils.SignatureUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,7 @@ import java.util.Objects;
 
 @Service
 public class KucoinService {
+    private final String KUCOIN_BASE_URL = "https://api.kucoin.com/api/v1";
 
     @Value("${kucoin.api.key}")
     private String apiKey;
@@ -32,9 +34,8 @@ public class KucoinService {
     private RestTemplate restTemplate;
 
     public AccountsResponse getAccounts(){
-        final String KUCOIN_BASE_URL = "https://api.kucoin.com";
-        final String KUCOIN_PATH_PORTFOLIO = "/api/v1/accounts";
-        final String url = KUCOIN_BASE_URL + KUCOIN_PATH_PORTFOLIO;
+        final String KUCOIN_PATH_ACCOUNT = "/accounts";
+        final String url = KUCOIN_BASE_URL + KUCOIN_PATH_ACCOUNT;
         final String timestamp = String.valueOf(Instant.now().toEpochMilli());
         URI uri = UriComponentsBuilder.fromUriString(url)
                 .build()
@@ -45,6 +46,21 @@ public class KucoinService {
 
         return restTemplate.exchange(url,
                 HttpMethod.GET, entity, AccountsResponse.class).getBody();
+    }
+
+    public KucoinEarnResponse getKucoiEarnItems(){
+        final String KUCOIN_PATH_EARN = "/earn/hold-assets";
+        final String url = KUCOIN_BASE_URL + KUCOIN_PATH_EARN;
+        final String timestamp = String.valueOf(Instant.now().toEpochMilli());
+        URI uri = UriComponentsBuilder.fromUriString(url)
+                .build()
+                .toUri();
+        String signature = sign(uri, timestamp);
+        String signedPassphrse = SignatureUtil.createSignatureBytesEncoded64(secretKey, passphrase);
+        HttpEntity<?> entity = getHttpEntity(signature, signedPassphrse, timestamp);
+
+        return restTemplate.exchange(url,
+                HttpMethod.GET, entity, KucoinEarnResponse.class).getBody();
     }
 
     private String sign(URI uri, String timestamp) {

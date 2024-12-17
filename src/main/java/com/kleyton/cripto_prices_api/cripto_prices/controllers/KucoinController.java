@@ -3,7 +3,8 @@ package com.kleyton.cripto_prices_api.cripto_prices.controllers;
 import com.kleyton.cripto_prices_api.cripto_prices.exceptions.InvalidSymbolException;
 
 import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.KucoinService;
-import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.AccountsResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.account.AccountsResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.kucoinEarn.KucoinEarnResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -23,7 +24,7 @@ public class KucoinController {
     KucoinService kucoinService;
 
     @Operation(summary = "Obtém a quantidade de cada ativo na conta da Kucoin",
-            description = "Retorna a quantidade de cada ativo na conta da Coinbase.")
+            description = "Retorna a quantidade de cada ativo na conta da Kucoin.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Balanços retornados com sucesso"),
             @ApiResponse(responseCode = "400", description = "Símbolo inválido"),
@@ -33,6 +34,25 @@ public class KucoinController {
     public ResponseEntity<?> getAccounts() {
         try {
             AccountsResponse accounts = kucoinService.getAccounts();
+            return ResponseEntity.ok(accounts);
+        } catch (InvalidSymbolException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Obtém a quantidade de cada ativo na Kucoin Earns.",
+            description = "Retorna a quantidade de cada ativo na Kucoin Earns.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Valores retornados com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Símbolo inválido"),
+            @ApiResponse(responseCode = "500", description = "Erro interno")
+    })
+    @GetMapping("/kucoinEarn")
+    public ResponseEntity<?> getKucoinEarnItems() {
+        try {
+            KucoinEarnResponse accounts = kucoinService.getKucoiEarnItems();
             return ResponseEntity.ok(accounts);
         } catch (InvalidSymbolException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

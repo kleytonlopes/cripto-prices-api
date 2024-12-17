@@ -1,4 +1,4 @@
-package com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses;
+package com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
