@@ -1,18 +1,16 @@
-package com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses;
+package com.kleyton.cripto_prices_api.cripto_prices.summary;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.kleyton.cripto_prices_api.cripto_prices.models.Asset;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
 @AllArgsConstructor
-public class KucoinResponse {
+public class SummaryResponse {
     private List<Asset> assets;
 
     public List<Asset> getAssets() {

@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SpotPositionResponse {
+public class SpotPositions {
     private String asset;
     @JsonProperty("account_uuid")
     private String accountUuid;

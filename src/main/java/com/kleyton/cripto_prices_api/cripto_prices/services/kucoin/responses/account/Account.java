@@ -7,7 +7,7 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
-public class AccountResponse {
+public class Account {
     private String currency;
     private Double available;
     private Double balance;

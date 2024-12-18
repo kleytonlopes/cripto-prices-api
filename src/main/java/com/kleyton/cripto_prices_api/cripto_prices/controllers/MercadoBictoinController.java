@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @Tag(name = "Mercado Bitcoin", description = "Resumo dos meus ativos na corretora Mercado Bitcoin")
 @RestController
 @RequestMapping("mercado-bitcoin")

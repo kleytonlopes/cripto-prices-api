@@ -2,15 +2,11 @@ package com.kleyton.cripto_prices_api.cripto_prices.controllers;
 
 import com.kleyton.cripto_prices_api.cripto_prices.exceptions.InvalidSymbolException;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.BinanceService;
-import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.BinanceResponse;
-import com.kleyton.cripto_prices_api.cripto_prices.services.cardano.CardanoResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.cardano.CardanoService;
 import com.kleyton.cripto_prices_api.cripto_prices.services.coinbase.CoinbaseService;
-import com.kleyton.cripto_prices_api.cripto_prices.services.coinbase.responses.CoinbaseResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.KucoinService;
-import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.KucoinResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.mercadoBitcoin.MercadoBitcoinService;
-import com.kleyton.cripto_prices_api.cripto_prices.services.mercadoBitcoin.responses.MercadoBitcoinResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.summary.SummaryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -51,10 +47,10 @@ public class SummaryController {
             @ApiResponse(responseCode = "500", description = "Erro interno")
     })
     @GetMapping("/binance")
-    public ResponseEntity<?> getBinanceTotalBalances() {
+    public ResponseEntity<?> getBinanceSummary() {
         try {
-            BinanceResponse price = binanceService.getTotalBalance();
-            return ResponseEntity.ok(price);
+            SummaryResponse summary = binanceService.getSummary();
+            return ResponseEntity.ok(summary);
         } catch (InvalidSymbolException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -72,8 +68,8 @@ public class SummaryController {
     @GetMapping("/coinbase")
     public ResponseEntity<?> getCoinbaseTotalBalances() {
         try {
-            CoinbaseResponse coinbaseResponse = coinbaseService.getTotalBalance();
-            return ResponseEntity.ok(coinbaseResponse);
+            SummaryResponse summary = coinbaseService.getSummary();
+            return ResponseEntity.ok(summary);
         } catch (InvalidSymbolException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -91,8 +87,8 @@ public class SummaryController {
     @GetMapping("/kucoin")
     public ResponseEntity<?> getKucoinTotalBalances() {
         try {
-            KucoinResponse kucoinResponse = kucoinService.getTotalBalance();
-            return ResponseEntity.ok(kucoinResponse);
+            SummaryResponse summary = kucoinService.getSummary();
+            return ResponseEntity.ok(summary);
         } catch (InvalidSymbolException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -110,8 +106,8 @@ public class SummaryController {
     @GetMapping("/mercado-bitcoin")
     public ResponseEntity<?> getMbTotalBalances() {
         try {
-            MercadoBitcoinResponse mercadoBitcoinResponse = mbService.getTotalBalance();
-            return ResponseEntity.ok(mercadoBitcoinResponse);
+            SummaryResponse summary = mbService.getSummary();
+            return ResponseEntity.ok(summary);
         } catch (InvalidSymbolException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -134,8 +130,8 @@ public class SummaryController {
                             "plnq5wge79hq0gxvafx0lgp9vu9mewkehj2zg7f9q9tfacj")
             @RequestParam String address) {
         try {
-            CardanoResponse response = cardanoService.getTotalBalance(address);
-            return ResponseEntity.ok(response);
+            SummaryResponse summary = cardanoService.getSummary(address);
+            return ResponseEntity.ok(summary);
         } catch (InvalidSymbolException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

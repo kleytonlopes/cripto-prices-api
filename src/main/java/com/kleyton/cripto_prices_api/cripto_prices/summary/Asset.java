@@ -1,22 +1,22 @@
-package com.kleyton.cripto_prices_api.cripto_prices.models;
+package com.kleyton.cripto_prices_api.cripto_prices.summary;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigInteger;
-
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 public class Asset {
     private String symbol;
     private Double quantity;
     private Double valueInDollars;
+
+    public Asset(String symbol, Double quantity){
+        this.setSymbol(symbol);
+        this.setQuantity(quantity);
+    }
 
     @JsonIgnore
     public boolean isSmallValue(){

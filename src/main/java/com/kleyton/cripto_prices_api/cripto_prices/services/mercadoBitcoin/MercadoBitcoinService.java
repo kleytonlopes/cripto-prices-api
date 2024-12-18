@@ -1,15 +1,11 @@
 package com.kleyton.cripto_prices_api.cripto_prices.services.mercadoBitcoin;
 
-import com.kleyton.cripto_prices_api.cripto_prices.models.Asset;
-import com.kleyton.cripto_prices_api.cripto_prices.services.binance.BinanceService;
-import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.KucoinResponse;
-import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.kucoinEarn.KucoinEarnResponse;
-import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.price.KucoinPriceResponse;
-import com.kleyton.cripto_prices_api.cripto_prices.services.mercadoBitcoin.responses.MercadoBitcoinResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.summary.Asset;
 import com.kleyton.cripto_prices_api.cripto_prices.services.mercadoBitcoin.responses.authorize.AuthorizationResponse;
-import com.kleyton.cripto_prices_api.cripto_prices.services.mercadoBitcoin.responses.balances.BalanceResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.mercadoBitcoin.responses.balances.Balance;
 import com.kleyton.cripto_prices_api.cripto_prices.services.mercadoBitcoin.responses.balances.BalancesResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.price.PriceService;
+import com.kleyton.cripto_prices_api.cripto_prices.summary.SummaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -44,7 +40,7 @@ public class MercadoBitcoinService {
     private RestTemplate restTemplate;
 
 
-    public MercadoBitcoinResponse getTotalBalance() throws Exception{
+    public SummaryResponse getSummary() throws Exception{
         BalancesResponse balances = this.getBalances();
         List<Asset> assets = new ArrayList<>(balances.toAssetList());
 
@@ -62,7 +58,7 @@ public class MercadoBitcoinService {
                 }catch (Exception e){}
             }
         }
-        return new MercadoBitcoinResponse(assets);
+        return new SummaryResponse(assets);
     }
 
     public BalancesResponse getBalances() throws Exception {
@@ -70,11 +66,11 @@ public class MercadoBitcoinService {
         String url = MB_BASE_URL + MB_ACCOUNT_PATH;
         AuthorizationResponse authorizeResponse = this.login();
         HttpEntity<?> entity = getHttpEntity(authorizeResponse.getAccessToken());
-        BalanceResponse[] balances = restTemplate.exchange(
+        Balance[] balances = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
                 entity,
-                BalanceResponse[].class
+                Balance[].class
         ).getBody();
         return new BalancesResponse(balances);
     }

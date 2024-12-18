@@ -22,19 +22,40 @@ public class PricesController {
     @Autowired
     private PriceService priceService;
 
-    @Operation(summary = "Obtém o preço de um símbolo",
+    @Operation(summary = "Obtém o preço de um símbolo na corretora Binance",
             description = "Retorna o preço do símbolo fornecido. O símbolo deve ser válido.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Preço retornado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Símbolo inválido"),
             @ApiResponse(responseCode = "500", description = "Erro interno")
     })
-    @GetMapping("/price")
-    public ResponseEntity<?> getPrice(
+    @GetMapping("/binance/price")
+    public ResponseEntity<?> getBinancePrice(
             @Parameter(description = "Símbolo para o qual o preço será retornado", example = "BTCUSDT")
             @RequestParam String symbol) {
         try {
             Double price = priceService.getBinancePrice(symbol);
+            return ResponseEntity.ok(price);
+        } catch (InvalidSymbolException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Obtém o preço de um símbolo na corretora Kucoin.",
+            description = "Retorna o preço do símbolo fornecido. O símbolo deve ser válido.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Preço retornado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Símbolo inválido"),
+            @ApiResponse(responseCode = "500", description = "Erro interno")
+    })
+    @GetMapping("/kucoin/price")
+    public ResponseEntity<?> getKucoinPrice(
+            @Parameter(description = "Símbolo para o qual o preço será retornado", example = "BTC-USDT")
+            @RequestParam String symbol) {
+        try {
+            Double price = priceService.getKucoinPrice(symbol);
             return ResponseEntity.ok(price);
         } catch (InvalidSymbolException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

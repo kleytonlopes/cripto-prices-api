@@ -3,7 +3,7 @@ package com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.ku
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kleyton.cripto_prices_api.cripto_prices.models.Asset;
+import com.kleyton.cripto_prices_api.cripto_prices.summary.Asset;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,18 +14,13 @@ import java.util.List;
 @Setter
 public class KucoinEarnResponse {
     @JsonProperty("data")
-    private DataResponse dataResponse;
+    private Data data;
 
     @JsonIgnore
     public List<Asset> toAssetList(){
-        return this.getDataResponse().getItemResponses()
+        return this.getData().getItem()
                 .stream()
-                .map(item ->
-                        Asset.builder()
-                                .symbol(item.getCurrency())
-                                .quantity(item.getHoldAmount())
-                                .build()
-                )
+                .map(item -> new Asset(item.getCurrency(), item.getHoldAmount()))
                 .toList();
     }
 }

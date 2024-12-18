@@ -1,8 +1,7 @@
 package com.kleyton.cripto_prices_api.cripto_prices.services.coinbase;
 
-import com.kleyton.cripto_prices_api.cripto_prices.models.Asset;
+import com.kleyton.cripto_prices_api.cripto_prices.summary.Asset;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.BinanceService;
-import com.kleyton.cripto_prices_api.cripto_prices.services.coinbase.responses.CoinbaseResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.coinbase.responses.portfolio.PortfolioResponse;
 
 import java.util.ArrayList;
@@ -11,6 +10,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.time.Instant;
 
+import com.kleyton.cripto_prices_api.cripto_prices.summary.SummaryResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.utils.PemUtil;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,10 +53,10 @@ public class CoinbaseService {
                 HttpMethod.GET, getHttpEntity(urlWithoutHttps), PortfolioResponse.class).getBody();
     }
 
-    public CoinbaseResponse getTotalBalance() throws Exception{
-       PortfolioResponse portfolioResponse = this.getPortfolio("f198ac9f-c120-550c-9a9f-b83a6ed97cca");
+    public SummaryResponse getSummary() throws Exception{
+        PortfolioResponse portfolioResponse = this.getPortfolio(coinbasePortfolioUuid);
         List<Asset> assets = new ArrayList<>(portfolioResponse.toAssetList());
-        return new CoinbaseResponse(assets);
+        return new SummaryResponse(assets);
     }
 
     private HttpEntity<?> getHttpEntity(String url) throws Exception {

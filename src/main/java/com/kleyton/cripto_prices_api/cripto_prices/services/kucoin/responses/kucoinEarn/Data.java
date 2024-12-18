@@ -10,8 +10,8 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
-public class DataResponse {
+public class Data {
     private Integer totalNum;
     @JsonProperty("items")
-    private List<ItemResponse> itemResponses;
+    private List<Item> item;
 }

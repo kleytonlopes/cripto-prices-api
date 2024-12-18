@@ -1,10 +1,10 @@
 package com.kleyton.cripto_prices_api.cripto_prices.services.kucoin;
 
-import com.kleyton.cripto_prices_api.cripto_prices.models.Asset;
-import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.KucoinResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.summary.Asset;
 import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.account.AccountsResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.kucoinEarn.KucoinEarnResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.kucoin.responses.price.KucoinPriceResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.summary.SummaryResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.utils.SignatureUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,7 +66,7 @@ public class KucoinService {
                 HttpMethod.GET, entity, AccountsResponse.class).getBody();
     }
 
-    public KucoinResponse getTotalBalance(){
+    public SummaryResponse getSummary(){
         AccountsResponse accounts= this.getAccounts();
         KucoinEarnResponse kucoinEarnItems = this.getKucoinEarnItems();
 
@@ -88,7 +88,7 @@ public class KucoinService {
                 }catch (Exception e){}
             }
         }
-        return new KucoinResponse(assets);
+        return new SummaryResponse(assets);
     }
 
     public KucoinEarnResponse getKucoinEarnItems(){

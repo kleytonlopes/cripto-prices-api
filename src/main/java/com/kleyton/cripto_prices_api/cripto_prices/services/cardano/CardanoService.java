@@ -1,16 +1,20 @@
 package com.kleyton.cripto_prices_api.cripto_prices.services.cardano;
 
 import com.kleyton.cripto_prices_api.cripto_prices.exceptions.ApiError;
-import com.kleyton.cripto_prices_api.cripto_prices.models.Asset;
+import com.kleyton.cripto_prices_api.cripto_prices.summary.Asset;
 import com.kleyton.cripto_prices_api.cripto_prices.services.blockfrost.responses.AddressResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.blockfrost.BlockfrostService;
 import com.kleyton.cripto_prices_api.cripto_prices.services.blockfrost.responses.AccountResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.price.PriceService;
+import com.kleyton.cripto_prices_api.cripto_prices.summary.SummaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class CardanoService {
@@ -21,7 +25,7 @@ public class CardanoService {
     @Autowired
     BlockfrostService blockfrostService;
 
-    public CardanoResponse getTotalBalance(String address) {
+    public SummaryResponse getSummary(String address) {
         try {
             AddressResponse addressResponse = blockfrostService.getAddressBalances(address);
             AccountResponse accountResponse = blockfrostService
@@ -33,10 +37,8 @@ public class CardanoService {
                     .add(accountResponse.getControlledAmount());
             Double totalValue = price * totalQuantityAdas.doubleValue();
 
-            return CardanoResponse.builder()
-                    .asset(new Asset("ADA", totalQuantityAdas.doubleValue(), totalValue))
-                    .build();
-
+            Asset asset = new Asset("ADA", totalQuantityAdas.doubleValue(), totalValue);
+            return new SummaryResponse(List.of(asset));
         } catch (HttpClientErrorException.BadRequest e) {
             String errorResponse = e.getResponseBodyAsString();
             throw new RuntimeException(ApiError.UNEXPECTED_ERROR.getMessage(errorResponse), e);

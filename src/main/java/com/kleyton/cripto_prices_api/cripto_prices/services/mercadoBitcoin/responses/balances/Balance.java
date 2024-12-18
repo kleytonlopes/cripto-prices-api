@@ -7,7 +7,7 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
-public class BalanceResponse {
+public class Balance {
     private String symbol;
     private Double total;
 }

@@ -1,12 +1,12 @@
 package com.kleyton.cripto_prices_api.cripto_prices.services.binance;
 
-import com.kleyton.cripto_prices_api.cripto_prices.models.Asset;
-import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.BinanceResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.summary.Asset;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.account.AccountResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.price.BinancePriceResponse;
-import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.account.SimpleEarnAccountResponse;
-import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.position.FlexiblePositionsResponse;
-import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.position.LockedPositionsResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.SimpleEarnAccountResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.FlexiblePositionsResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.services.binance.responses.simpleEarn.LockedPositionsResponse;
+import com.kleyton.cripto_prices_api.cripto_prices.summary.SummaryResponse;
 import com.kleyton.cripto_prices_api.cripto_prices.utils.SignatureUtil;
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +57,7 @@ public class BinanceService {
                 .getBody();
     }
 
-    public BinanceResponse getTotalBalance(){
+    public SummaryResponse getSummary(){
         AccountResponse account = this.getAccount();
         FlexiblePositionsResponse flexiblePositions = this.getStakingFlexiblePositions();
         LockedPositionsResponse lockedPositions = this.getStakingLockedPositions();
@@ -85,7 +85,7 @@ public class BinanceService {
             }
         }
 
-        return new BinanceResponse(assets);
+        return new SummaryResponse(assets);
     }
 
     public AccountResponse getAccount() throws HttpClientErrorException.BadRequest {
